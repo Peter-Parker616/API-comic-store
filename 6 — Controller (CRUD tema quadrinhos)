@@ -1,0 +1,103 @@
+const supabase = require('../services/supabaseClient');
+const TABLE = 'comics';
+
+async function listComics(req, res, next) {
+  try {
+    const userId = req.user.id;
+
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('*')
+      .eq('owner', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) return next(error);
+    res.json(data);
+  } catch (err) { next(err); }
+}
+
+async function getComic(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('*')
+      .eq('id', id)
+      .eq('owner', userId)
+      .single();
+
+    if (error) return res.status(404).json({ error: 'Quadrinho não encontrado' });
+
+    res.json(data);
+  } catch (err) { next(err); }
+}
+
+async function createComic(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { title, author, publisher, price, stock, description = '' } = req.body;
+
+    const { data, error } = await supabase
+      .from(TABLE)
+      .insert([{
+        title,
+        author,
+        publisher,
+        price,
+        stock,
+        description,
+        owner: userId
+      }])
+      .select()
+      .single();
+
+    if (error) return next(error);
+    res.status(201).json(data);
+  } catch (err) { next(err); }
+}
+
+async function updateComic(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const updates = req.body;
+
+    const { data, error } = await supabase
+      .from(TABLE)
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .eq('owner', userId)
+      .select()
+      .single();
+
+    if (error) return next(error);
+    res.json(data);
+  } catch (err) { next(err); }
+}
+
+async function deleteComic(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const { error } = await supabase
+      .from(TABLE)
+      .delete()
+      .eq('id', id)
+      .eq('owner', userId);
+
+    if (error) return next(error);
+
+    res.status(204).send();
+  } catch (err) { next(err); }
+}
+
+module.exports = {
+  listComics,
+  getComic,
+  createComic,
+  updateComic,
+  deleteComic
+};
