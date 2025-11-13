@@ -1,0 +1,21 @@
+const Joi = require('joi');
+
+const createComicSchema = Joi.object({
+  title: Joi.string().min(1).required(),
+  author: Joi.string().min(1).required(),
+  publisher: Joi.string().min(1).required(),
+  price: Joi.number().positive().required(),
+  stock: Joi.number().integer().min(0).required(),
+  description: Joi.string().allow('', null)
+});
+
+const updateComicSchema = Joi.object({
+  title: Joi.string(),
+  author: Joi.string(),
+  publisher: Joi.string(),
+  price: Joi.number().positive(),
+  stock: Joi.number().integer().min(0),
+  description: Joi.string().allow('', null)
+}).min(1);
+
+module.exports = { createComicSchema, updateComicSchema };
