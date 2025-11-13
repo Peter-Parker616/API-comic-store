@@ -1,0 +1,18 @@
+comic-store-api/
+├─ .env.example
+├─ package.json
+├─ README.md
+├─ server.js
+├─ src/
+│  ├─ routes/
+│  │  └─ comics.js
+│  ├─ controllers/
+│  │  └─ comicsController.js
+│  ├─ middlewares/
+│  │  └─ auth.js
+│  ├─ services/
+│  │  └─ supabaseClient.js
+│  └─ validators/
+│     └─ comicsValidator.js
+└─ migrations/
+   └─ 001_create_comics.sql
