@@ -1,0 +1,2 @@
+GET /comics
+Authorization: Bearer <TOKEN>
