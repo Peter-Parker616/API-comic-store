@@ -1,0 +1,11 @@
+curl -X POST https://<render>.onrender.com/comics \
+ -H "Authorization: Bearer <TOKEN>" \
+ -H "Content-Type: application/json" \
+ -d '{
+    "title": "Batman Ano Um",
+    "author": "Frank Miller",
+    "publisher": "DC Comics",
+    "price": 39.90,
+    "stock": 12,
+    "description": "Clássico absoluto."
+ }'
