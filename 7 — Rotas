@@ -1,0 +1,26 @@
+const express = require('express');
+const router = express.Router();
+const { createComicSchema, updateComicSchema } = require('../validators/comicsValidator');
+const { listComics, getComic, createComic, updateComic, deleteComic } = require('../controllers/comicsController');
+const requireAuth = require('../middlewares/auth');
+
+router.use(requireAuth);
+
+router.get('/', listComics);
+router.get('/:id', getComic);
+
+router.post('/', (req, res, next) => {
+  const { error } = createComicSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  createComic(req, res, next);
+});
+
+router.put('/:id', (req, res, next) => {
+  const { error } = updateComicSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  updateComic(req, res, next);
+});
+
+router.delete('/:id', deleteComic);
+
+module.exports = router;
