@@ -1,0 +1,16 @@
+create extension if not exists "pgcrypto";
+
+create table if not exists public.comics (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  author text not null,
+  publisher text not null,
+  price numeric not null,
+  stock integer not null,
+  description text,
+  owner uuid not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists comics_owner_idx on public.comics(owner);
